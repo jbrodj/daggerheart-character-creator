@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --experimental-json-modules --exec babel-node index.js",
-    "debug": "DEBUG=express:* nodemon --experimental-json-modules index.js"
+    "debug": "DEBUG=express:* nodemon --experimental-json-modules --exec babel-node index.js"
   },
   "dependencies": {
     "express": "^5.1.0",
