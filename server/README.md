@@ -4,7 +4,10 @@
 
 ## Design Notes
 
-This server will be built on ExpressJS.
+This server will be built on [ExpressJS](https://expressjs.com/en/guide/routing.html).
+
+DB integration will use [`mysql2`](https://www.npmjs.com/package/mysql2?activeTab=readme) - which is intended to be a drop-in replacement for [`mysqljs`](https://github.com/mysqljs/mysql).
+
 ### /public
 - Serves up static assets like images or documents (ie. html)
 
