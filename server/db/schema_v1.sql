@@ -1,7 +1,3 @@
-DROP DATABASE IF EXISTS `dcc`;
-CREATE DATABASE IF NOT EXISTS `dcc`;
-USE `dcc`;
-
 -- Create tables to store game-provided data:
 CREATE TABLE IF NOT EXISTS `armors` (
     `id` TINYINT AUTO_INCREMENT,
@@ -47,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `communities` (
 
 CREATE TABLE IF NOT EXISTS `classes` (
     `id` TINYINT AUTO_INCREMENT,
-    `class_name` ENUM('guardian', 'ranger', 'rogue', 'sorcerer', 'warrior') NOT NULL,
+    `class_name` ENUM('guardian', 'ranger', 'rogue', 'sorcerer', 'warrior') UNIQUE NOT NULL,
     `class_feature_1` TINYTEXT NOT NULL,
     `class_feature_2` TINYTEXT NOT NULL,
     `class_feature_3` VARCHAR(500) NOT NULL,

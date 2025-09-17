@@ -1,7 +1,3 @@
--- Create DB
-CREATE DATABASE IF NOT EXISTS `dcc`;
-USE `dcc`;
-
 -- Add all possible armor values to the armors table
 INSERT IGNORE INTO `armors` (`armor_name`, `feature`, `base_score`, `base_thresholds_csv`, `evasion_mod`)
     VALUES ('chainmail','Heavy: -1 to Evasion', 4, '7,15', -1);
