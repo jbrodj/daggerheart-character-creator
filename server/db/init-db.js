@@ -1,64 +1,70 @@
-import { createConnection } from 'mysql2';
+import { createPool } from 'mysql2/promise'
 import { readFile } from 'fs';
 import path from 'path';
 // Config dotenv to enable environment variables
 import dotenv from 'dotenv'
 dotenv.config()
 
-// Ref source: https://www.w3tutorials.net/blog/nodejs-execute-sql-file/
+const DB_SCHEMA_PATH = path.join('./db', 'schema_v1.sql')
 
-// Create connection
-const connection = createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-})
+// Ref source: 
+  // https://www.w3tutorials.net/blog/nodejs-execute-sql-file/
+  // https://sidorares.github.io/node-mysql2/docs/documentation/promise-wrapper
 
-connection.connect((err) => {
-  if (err) throw err
-  console.log('Connection established')
-  connection.query('CREATE DATABASE IF NOT EXISTS dcc', (err, result) => {
-    if (err) throw err
-    console.log('DB Created', result)
+
+// Accepts an open file (from readFile) and returns list of statements.
+export const getStatementsFromFile = (file) => {
+  const statements = file.split(';').filter((statement) => statement.trim() !== '')
+  return statements
+}
+
+// Accepts an individual SQL statement and the DB connection ref. Executes the statement.
+export const executeStatement = async (statement, connection) => {
+  try {
+    await connection.query(statement)
+  } catch (err) {
+    console.error('Execution error: ', err)
+  }
+}
+
+// Accepts path to a SQL file. Connects to DB, reads file, and executes all statements in SQL file. 
+export const runSqlFile = async (filePath) => {
+    const connection = createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: 'dcc'
   })
-})
+  const result = readFile(filePath, 'utf-8', (err, file) => {
+    if (err) throw err 
+    const statements = getStatementsFromFile(file)
+    statements.forEach((statement) => {
+      executeStatement(statement, connection)
+    })
+  }) 
+  setTimeout(() => {
+    connection.end()
+  }, 500)
+  return result
+}
 
-connection.query('USE dcc', (err, result) => {
-  if (err) throw err
-  console.log('Using dcc', result)
-})
 
-  // Read schema file to build tables
-  const schemaFilePath = path.join('./db', 'schema_v1.sql')
-  readFile(schemaFilePath, 'utf8', (err, sql) => {
-      if (err) throw err
-
-      // Split into individual statements and execute each
-      const statements = sql.split(';').filter((statement) => statement.trim()!== '')
-      statements.forEach((statement) => {
-          connection.query(statement, (err, results) => {
-              if (err) {
-                  console.error('Error executing statement:', err)
-              } else {
-                  console.log('Statement executed successfully:', results)
-              }
-          })
-      })
+const runner = async () => {
+  const conn = createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
   })
+  let result
+  try {
+    result = await conn.query('CREATE DATABASE IF NOT EXISTS dcc')
+  } catch (error) {
+    console.error(error)
+  }
+  console.log(result[0])
 
-  // Read the init file to populate tables with sample game data
-  const sqlFilePath = path.join('./db', 'init-db.sql')
-  readFile(sqlFilePath, 'utf8', (err, sql) => {
-      if (err) throw err
+  // Generate table schema from schema file
+  await runSqlFile(DB_SCHEMA_PATH)
 
-      // Split into individual statements and run each
-      const statements = sql.split(';').filter((statement) => statement.trim() !== '')
-      statements.forEach((statement) => {
-          connection.query(statement, (err, results) => {
-              if (err) {
-                  console.error('Error executing statement:', err)
-              } else {
-                  console.log('Statement executed successfully:', results)
-              }
-          })
-      })
-  })
+  conn.end()
+}
+
+runner()
