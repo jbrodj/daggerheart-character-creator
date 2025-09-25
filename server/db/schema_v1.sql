@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
 
 CREATE TABLE IF NOT EXISTS `subclasses` (
     `id` TINYINT AUTO_INCREMENT,
-    `class_id` TINYINT,
+    `class_id` TINYINT NOT NULL,
     `subclass_name` VARCHAR(24) UNIQUE NOT NULL,
     `foundation_feature_name` VARCHAR(24) NOT NULL,
     `foundation_feature_text` VARCHAR(500) NOT NULL,
