@@ -32,6 +32,31 @@ const getSchema = async (tableName) => {
 }
 
 
+// Get table schema by table name -- for testing
+  // Spec: /schema/?table=<tableName>
+app.get('/schema/', async (req, res) => {
+  const query = req._parsedUrl.query
+  const tableKeyStr = 'table='
+  // URL must include query with table name
+  if (!query || !query.includes(tableKeyStr)) {
+    const error = {message: 'No query provided or malformed query.'}
+    res.send(error)
+    return
+  }
+  // Find query value by locating the `table` key
+  const queryValue = query.substring(query.indexOf(tableKeyStr) + tableKeyStr.length)
+  let result
+
+  try {
+    result = await getSchema(queryValue)
+    
+  } catch (error) {
+    result = error
+  }
+  res.send(result)
+})
+
+
 // Listen for connections on specified port. 
 app.listen(PORT, () => {
   console.log('Listening on port', PORT)
