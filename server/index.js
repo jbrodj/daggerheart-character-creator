@@ -19,6 +19,19 @@ const pool = mysql.createPool({
 }).promise()
 
 
+// Retrieves table schema. Takes table name as string.
+const getSchema = async (tableName) => {
+  try {
+    const result = await pool.query('DESCRIBE' + pool.escapeId(tableName))
+    // Result will be arr of objects, first is result, second is metadata. We only need the first index.
+    return result[0]
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+
 // Listen for connections on specified port. 
 app.listen(PORT, () => {
   console.log('Listening on port', PORT)
