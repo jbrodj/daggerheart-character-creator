@@ -32,6 +32,32 @@ const getSchema = async (tableName) => {
 }
 
 
+// Retrieves a single or set of resources from the game rules tables
+// Takes tableName STR, and optionally a columnName STR and columnValue STR:
+  // SELECT [columnName or *] FROM [tableName] (Optionally: WHERE columnName = columnValue)
+const getResource = async (tableName, columnName, columnValue) => {
+  // Select specific resource queries if a column name is specified
+  if (columnName) {
+    try {
+      const result = await pool.query(
+        'SELECT * FROM' + pool.escapeId(tableName) + 'WHERE' + pool.escapeId(columnName) + '=' + pool.escape(columnValue))
+      return result[0]
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+  // Select all queries
+  try {
+    const result = await pool.query('SELECT * FROM' + pool.escapeId(tableName))
+    return result[0]
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+
 // Get table schema by table name -- for testing
   // Spec: /schema/?table=<tableName>
 app.get('/schema/', async (req, res) => {
