@@ -88,12 +88,12 @@ app.get('/schema/', async (req, res) => {
 app.get('/resource/', async (req, res) => {
   const query = req.originalUrl
   const hasColumnQueryParam = query.includes('&')
-  // The table name substring either ends at the start of the next query param (if it exists), else at end of url.
+  // Table name substring either ends at the start of the next query param (if it exists), else at end of url.
   const tableQueryEndIndex = hasColumnQueryParam ? query.indexOf('&') : query.length
   const tableValue = query.substring(query.indexOf('?table=') + '?table='.length, tableQueryEndIndex)
   const columnQuery = query.substring(tableQueryEndIndex +1)
   const keyValSeparatorIndex = columnQuery.indexOf('=')
-
+  // Column key and value can be passed as empty strings if there is no param present
   const columnKey = hasColumnQueryParam ? columnQuery.substring(0, keyValSeparatorIndex) : ''
   const columnValue = hasColumnQueryParam ? columnQuery.substring(keyValSeparatorIndex +1).replaceAll('+', ' ') : ''
   let result
