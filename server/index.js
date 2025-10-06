@@ -83,6 +83,35 @@ app.get('/schema/', async (req, res) => {
 })
 
 
+// Get all resources by table name (or get all columns for a specified row by table, column & value)
+  // Spec: /resource/?table=<tableValue>&<columnKey>=<columnValue>
+app.get('/resource/', async (req, res) => {
+  const query = req.originalUrl
+  const hasColumnQueryParam = query.includes('&')
+  // The table name substring either ends at the start of the next query param (if it exists), else at end of url.
+  const tableQueryEndIndex = hasColumnQueryParam ? query.indexOf('&') : query.length
+  const tableValue = query.substring(query.indexOf('?table=') + '?table='.length, tableQueryEndIndex)
+  const columnQuery = query.substring(tableQueryEndIndex +1)
+  const keyValSeparatorIndex = columnQuery.indexOf('=')
+
+  const columnKey = hasColumnQueryParam ? columnQuery.substring(0, keyValSeparatorIndex) : ''
+  const columnValue = hasColumnQueryParam ? columnQuery.substring(keyValSeparatorIndex +1).replaceAll('+', ' ') : ''
+  let result
+
+  try {
+    result = await getResource(tableValue, columnKey, columnValue)
+    // If no row exists with specified params, result will be empty array. Handle empty array case.
+    if (result.length == 0) {
+      result = {message: 'No resource found.'}
+    }
+
+  } catch (error) {
+    result = error
+  }
+  res.send(result)
+})
+
+
 // Listen for connections on specified port. 
 app.listen(PORT, () => {
   console.log('Listening on port', PORT)
