@@ -8,7 +8,7 @@ const app = express()
 // Config dotenv to enable environment variables
 dotenv.config()
 
-const PORT = 3000
+const PORT = 3306
 
 // create db connection -> using a pool to allow multiple queries without terminating connections
 // Chaining the promise method to allow async functions instead of mysql callbacks
@@ -16,7 +16,7 @@ const pool = mysql
   .createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
-    // password: process.env.DB_PW,
+    password: process.env.DB_PASSWORD,
     database: process.env.DB,
   })
   .promise()
