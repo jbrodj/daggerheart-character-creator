@@ -9,6 +9,7 @@
   "scripts": {
     "start": "nodemon --experimental-json-modules --exec babel-node index.js",
     "debug": "DEBUG=express:* nodemon --experimental-json-modules --exec babel-node index.js",
+    "lint": "npx eslint",
     "init": "node ./db/init-db.js",
     "pop_db": "node ./db/populate-db.js"
   },
@@ -22,6 +23,8 @@
     "@babel/core": "^7.28.3",
     "@babel/node": "^7.28.0",
     "@babel/preset-env": "^7.28.3",
-    "babel": "^5.8.38"
+    "babel": "^5.8.38",
+    "eslint": "^9.37.0",
+    "prettier": "^3.6.2"
   }
 }
