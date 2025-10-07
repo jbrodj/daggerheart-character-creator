@@ -9,8 +9,16 @@ defaults:
 jobs:
   automated-api-tests:
     runs-on: ubuntu-latest
+    env:
+      DB: test_db
+      DB_USER: root
+      # DB_PASSWORD: root
     steps:
       - uses: actions/checkout@v4
+      - name: Set up MySQL
+        run: |
+          sudo systemctl start mysql.service
+          mysql -e 'CREATE DATABASE ${{ env.DB }};' -u${{ env.DB_USER }}
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
@@ -23,7 +31,5 @@ jobs:
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Run API tests
-      # run: |
-      #   npm run start & postman collection run "17592122-7270d36f-da6d-463b-b4e8-494cac4e21b4"
         run: |
-          npm run start & node test.js
+          npm run start & postman collection run "17592122-7270d36f-da6d-463b-b4e8-494cac4e21b4"
