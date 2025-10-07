@@ -16,6 +16,10 @@ jobs:
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
       - name: Install dependencies
         run: npm ci
+      - name: Initialize database
+        run: npm run init
+      - name: Populate database
+        run: npm run pop_db
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Run API tests
