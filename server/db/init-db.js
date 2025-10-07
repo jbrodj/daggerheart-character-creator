@@ -32,6 +32,7 @@ export const runSqlFile = async (filePath) => {
     const connection = createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     database: 'dcc'
   })
   const result = readFile(filePath, 'utf-8', (err, file) => {
@@ -52,6 +53,7 @@ const runner = async () => {
   const conn = createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
   })
   let result
   try {
