@@ -2,6 +2,10 @@ name: Automated API tests using Postman CLI
 
 on: push
 
+defaults:
+  run:
+    working-directory: ./server
+
 jobs:
   automated-api-tests:
     runs-on: ubuntu-latest
@@ -9,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Postman CLI
         run: |
-          cd server && curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
       - name: Run application
         run: npm run start
       - name: Login to Postman CLI
