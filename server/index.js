@@ -2,6 +2,10 @@ import dotenv from 'dotenv'
 import express from 'express'
 import mysql from 'mysql2'
 
+// Import error message copy
+import errors from './errors.json' with { type: 'json' }
+const { notFound, queryError, resourceError } = errors
+
 // Initialize express instance
 const app = express()
 
@@ -29,7 +33,7 @@ const getSchema = async (tableName) => {
     return result[0]
   } catch (error) {
     console.error(error)
-    return error
+    return { message: resourceError }
   }
 }
 
@@ -51,7 +55,7 @@ const getResource = async (tableName, columnName, columnValue) => {
       return result[0]
     } catch (error) {
       console.error(error)
-      return error
+      return { message: resourceError }
     }
   }
   // Select all queries
@@ -60,7 +64,7 @@ const getResource = async (tableName, columnName, columnValue) => {
     return result[0]
   } catch (error) {
     console.error(error)
-    return error
+    return { message: resourceError }
   }
 }
 
@@ -71,7 +75,7 @@ app.get('/schema/', async (req, res) => {
   const tableKeyStr = 'table='
   // URL must include query with table name
   if (!query || !query.includes(tableKeyStr)) {
-    const error = { message: 'No query provided or malformed query.' }
+    const error = { message: queryError }
     res.send(error)
     return
   }
@@ -118,7 +122,7 @@ app.get('/resource/', async (req, res) => {
     result = await getResource(tableValue, columnKey, columnValue)
     // If no row exists with specified params, result will be empty array. Handle empty array case.
     if (result.length == 0) {
-      result = { message: 'No resource found.' }
+      result = { message: notFound }
     }
   } catch (error) {
     result = error
