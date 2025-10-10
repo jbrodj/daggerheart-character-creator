@@ -83,13 +83,7 @@ app.get('/schema/', async (req, res) => {
   const queryValue = query.substring(
     query.indexOf(tableKeyStr) + tableKeyStr.length,
   )
-  let result
-
-  try {
-    result = await getSchema(queryValue)
-  } catch (error) {
-    result = error
-  }
+  const result = await getSchema(queryValue)
   res.json(result)
 })
 
@@ -116,18 +110,13 @@ app.get('/resource/', async (req, res) => {
   const columnValue = hasColumnQueryParam
     ? columnQuery.substring(keyValSeparatorIndex + 1).replaceAll('+', ' ')
     : ''
-  let result
-
-  try {
-    result = await getResource(tableValue, columnKey, columnValue)
-    // If no row exists with specified params, result will be empty array. Handle empty array case.
-    if (result.length == 0) {
-      result = { message: notFound }
-    }
-  } catch (error) {
-    result = error
+  const result = await getResource(tableValue, columnKey, columnValue)
+  // If no row exists with specified params, result will be empty array. Handle empty array case.
+  if (result.length == 0) {
+    res.json({ message: notFound })
+  } else {
+    res.json(result)
   }
-  res.json(result)
 })
 
 // Listen for connections on specified port.
