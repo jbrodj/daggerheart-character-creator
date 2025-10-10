@@ -1,6 +1,6 @@
 name: Automated API tests using Postman CLI
 
-on: push
+on: workflow_dispatch
 
 defaults:
   run:
@@ -34,5 +34,3 @@ jobs:
       - name: Run API tests
         run: |
           npm run start & postman collection run "17592122-7270d36f-da6d-463b-b4e8-494cac4e21b4" --environment "17592122-962c3339-c7ee-4fc6-88ba-c13bdc2dd95e"
-        # run: |
-        #   npm run start & node test.js
