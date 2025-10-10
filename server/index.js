@@ -76,7 +76,7 @@ app.get('/schema/', async (req, res) => {
   // URL must include query with table name
   if (!query || !query.includes(tableKeyStr)) {
     const error = { message: queryError }
-    res.send(error)
+    res.json(error)
     return
   }
   // Find query value by locating the `table` key
@@ -90,7 +90,7 @@ app.get('/schema/', async (req, res) => {
   } catch (error) {
     result = error
   }
-  res.send(result)
+  res.json(result)
 })
 
 // Get all resources by table name (or get all columns for a specified row by table, column & value)
@@ -127,7 +127,7 @@ app.get('/resource/', async (req, res) => {
   } catch (error) {
     result = error
   }
-  res.send(result)
+  res.json(result)
 })
 
 // Listen for connections on specified port.
