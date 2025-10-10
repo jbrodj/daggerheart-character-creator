@@ -12,7 +12,8 @@
     "debug": "DEBUG=express:* nodemon --experimental-json-modules --exec babel-node index.js",
     "lint": "npx eslint",
     "init": "node ./db/init-db.js",
-    "pop_db": "node ./db/populate-db.js"
+    "pop_db": "node ./db/populate-db.js",
+    "test_api": "npm run start & postman collection run '17592122-7270d36f-da6d-463b-b4e8-494cac4e21b4' --environment '17592122-962c3339-c7ee-4fc6-88ba-c13bdc2dd95e' && killall node"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
