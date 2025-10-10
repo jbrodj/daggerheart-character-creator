@@ -1,0 +1,5 @@
+{
+  "notFound": "Resource not found",
+  "queryError": "No query provided or malformed query",
+  "resourceError": "An error occurred retrieving resource"
+}
