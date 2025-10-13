@@ -26,3 +26,4 @@ DB integration will use [`mysql2`](https://www.npmjs.com/package/mysql2?activeTa
 - In order to make Node compatible with the latest ES6 features, we'll likely want to use a compiler - using `Babel` here as dev dep.
   - This also helps ensure support with older browsers.
   - **Note: Babel has several dependencies with vulnerabilities that require updating packages with breaking changes -- further research required**
+- [`express-rate-limit`](https://www.npmjs.com/package/express-rate-limit) is a simple token bucket rate limiter that tracks requests per endpoint by client IP and sends a 429 with custom message to the client when the limit is reached. 
