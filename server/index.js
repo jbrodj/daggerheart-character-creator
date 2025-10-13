@@ -1,10 +1,11 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import mysql from 'mysql2'
+import rateLimit from 'express-rate-limit'
 
 // Import error message copy
 import errors from './errors.json' with { type: 'json' }
-const { notFound, queryError, resourceError } = errors
+const { notFound, queryError, resourceError, tooManyReqs } = errors
 
 // Initialize express instance
 const app = express()
@@ -13,6 +14,14 @@ const app = express()
 dotenv.config()
 
 const PORT = 3000
+
+// Configure express rate limiter middleware rules
+const limiter = rateLimit({
+  limit: 1000,
+  windowMs: 60 * 60 * 1000, // One hour
+  message: { error: tooManyReqs }
+})
+app.use(limiter)
 
 // create db connection -> using a pool to allow multiple queries without terminating connections
 // Chaining the promise method to allow async functions instead of mysql callbacks
